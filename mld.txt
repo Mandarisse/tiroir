@@ -1,0 +1,27 @@
+MLD - Tiroir
+Notation : clé primaire entre [crochets], clé étrangère précédée de #
+
+membre    ([id_membre], nom, prenom, pseudo, email, telephone, code_postal)
+            UNIQUE(pseudo), UNIQUE(email)
+
+categorie ([id_categorie], libelle, #id_categorie_parent)
+            #id_categorie_parent -> categorie(id_categorie), NULL si catégorie racine
+
+objet     ([id_objet], titre, description, prix_jour, caution, etat, actif, #id_membre, #id_categorie)
+            #id_membre    -> membre(id_membre)        (propriétaire)
+            #id_categorie -> categorie(id_categorie)
+
+photo     ([#id_objet, numero], url)
+            #id_objet -> objet(id_objet), ON DELETE CASCADE
+
+location  ([id_location], date_debut, date_fin, prix_total, statut, date_demande, #id_objet, #id_locataire)
+            #id_objet     -> objet(id_objet)
+            #id_locataire -> membre(id_membre)
+
+avis      ([#id_location, cote], note, commentaire, date_avis)
+            #id_location -> location(id_location)
+            cote IN ('locataire', 'proprietaire')
+
+favori    ([#id_membre, #id_objet], date_ajout)
+            #id_membre -> membre(id_membre)
+            #id_objet  -> objet(id_objet)
